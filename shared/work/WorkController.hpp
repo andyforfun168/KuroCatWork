@@ -16,8 +16,9 @@ struct Birth {std::string key;Tool tool;double started;float x=82,y=-90;};
 class Controller {
 public:
     Model model;SourceWorker sources;Audio audio;
-    float elapsed=0,autoAge=0,nextKey=0,birthAge=0,opacity=0;
-    bool showsAll=false,realTyping=false,toolChosen=false;
+    float elapsed=0,autoAge=0,nextKey=0,birthAge=-100,opacity=0;
+    bool showsAll=false,toolChosen=false;
+    bool ignoresPhysicalKeyboard() const {return model.enabled&&model.options.autonomousTyping&&model.running()&&!model.waiting();}
     int pendingBirths=0;double lastSave=0;std::vector<Birth> births;std::deque<std::pair<std::string,Tool>> birthQueue;
     void queueBirth(const std::string& key,Tool tool){birthQueue.emplace_back(key,tool);}
     void queueTools(){birthQueue.clear();births.clear();for(auto tool:{Tool::Codex,Tool::Claude})if(model.shows(tool))queueBirth(tool==Tool::Codex?"quota:codex":"quota:claude",tool);}
@@ -56,9 +57,10 @@ public:
     }
     template<class Physics,class Engine,class Settings,class Skin>
     void beforeStep(float dt,Physics& p,const Engine& input,Settings& settings,const Skin& skin,bool dragging,double monotonic){
+        (void)monotonic;
         elapsed+=std::min(dt,.1f);double now=wallNow();bool was=model.enabled;model.tick(now);if(was&&!model.enabled){sources.cancel();audio.stop();save();}
         opacity=std::clamp(opacity+(model.enabled?dt*7:-dt*5),0.f,1.f);
-        p.workMode=model.enabled;p.workAwaiting=model.waiting();p.workAngry=model.angryWaiting(now);p.workKeys.clear();
+        p.workExclusiveKeyboard=false;p.workMode=model.enabled;p.workAwaiting=model.waiting();p.workAngry=model.angryWaiting(now);p.workKeys.clear();
         settings.keyboardMarquee=model.enabled;p.workShowBubbles=model.options.typingBubbles;
         if(!model.enabled){p.workAutonomous=false;p.workRandomAngry=false;p.workDizzy=false;p.workBlinkClosure=0;return;}
         if(auto result=sources.take()){
@@ -76,18 +78,19 @@ public:
         bool quota=model.takeQuotaPoll(now),tasks=model.takeTaskPoll(now);
         if(quota||tasks){std::set<Tool> tools;if(model.options.selection==Selection::Automatic||model.options.selection==Selection::Both)tools={Tool::Codex,Tool::Claude};else tools={model.options.selection==Selection::Claude?Tool::Claude:Tool::Codex};sources.request(std::move(tools),quota);}
         if(now-lastSave>30){save();lastSave=now;}
-        realTyping=!input.activeKeys.empty()||monotonic-input.lastKeyActivityTime<.35;
-        auto frame=model.typing(dt,dragging,p.petHeadIntensity>.05f||p.petBodyIntensity>.05f,realTyping);
+        auto frame=model.typing(dt,dragging,p.petHeadIntensity>.05f||p.petBodyIntensity>.05f,false);
         p.workAutonomous=frame.active;
         if(dragging&&!wasDragging_){audio.play(Sound::Pickup,model.options);}wasDragging_=dragging;
-        if(!input.activeKeys.empty()&&elapsed-lastRealSound_>.065f){audio.play(Sound::Key,model.options,model.options.switchType);lastRealSound_=elapsed;}
         births.erase(std::remove_if(births.begin(),births.end(),[&](const Birth& b){return now-b.started>1;}),births.end());
-        if(!dragging&&!realTyping&&!birthQueue.empty()&&elapsed-birthAge>.38f){auto next=birthQueue.front();birthQueue.pop_front();birthAge=elapsed;audio.play(next.first.find("quota:")==0?Sound::Quota:Sound::Task,model.options);p.workKeys.insert(PhysicalKey::Space);size_t count=p.floatingKeycaps.size();emit(p,settings,skin,input,PhysicalKey::Space,true);Birth birth{next.first,next.second,now,82,-90};if(p.floatingKeycaps.size()>count){auto cap=p.floatingKeycaps.back();birth.x=cap.position.x-103;birth.y=cap.position.y-306;p.floatingKeycaps.pop_back();}births.push_back(birth);}
-        if(frame.active){autoAge+=dt;if(autoAge>=nextKey){nextKey=autoAge+(float)frame.interval;audio.play(Sound::Key,model.options,model.options.switchType);
+        if(!dragging&&!birthQueue.empty()&&elapsed-birthAge>.38f){auto next=birthQueue.front();birthQueue.pop_front();birthAge=elapsed;audio.play(next.first.find("quota:")==0?Sound::Quota:Sound::Task,model.options);audio.play(Sound::Key,model.options,model.options.switchType);p.workKeys.insert(PhysicalKey::Space);size_t count=p.floatingKeycaps.size();emit(p,settings,skin,input,PhysicalKey::Space,true);Birth birth{next.first,next.second,now,82,-90};if(p.floatingKeycaps.size()>count){auto cap=p.floatingKeycaps.back();birth.x=cap.position.x-103;birth.y=cap.position.y-306;p.floatingKeycaps.pop_back();}births.push_back(birth);}
+        const bool spaceHold=elapsed-birthAge>=0&&elapsed-birthAge<.16f&&!dragging;
+        if(frame.active&&!spaceHold){autoAge+=dt;if(autoAge>=nextKey){nextKey=autoAge+(float)frame.interval;audio.play(Sound::Key,model.options,model.options.switchType);
             const PhysicalKey left[]={PhysicalKey::A,PhysicalKey::S,PhysicalKey::D,PhysicalKey::F,PhysicalKey::W};const PhysicalKey right[]={PhysicalKey::J,PhysicalKey::K,PhysicalKey::L,PhysicalKey::I,PhysicalKey::O};
             left_=left[random()%5];right_=right[random()%5];emit(p,settings,skin,input,left_,false);emit(p,settings,skin,input,right_,false);keyUntil_=elapsed+.055f;}
             if(elapsed<keyUntil_){p.workKeys.insert(left_);p.workKeys.insert(right_);}
         }
+        if(spaceHold){p.workKeys.clear();p.workKeys.insert(PhysicalKey::Space);}
+        p.workExclusiveKeyboard=ignoresPhysicalKeyboard()||spaceHold;
         if(model.options.randomExpressions&&frame.active&&elapsed>nextExpression_){bool longTask=false;for(const auto& entry:model.tasks)longTask|=entry.second.state==State::Running&&now-entry.second.startedAt>=3600;expression_=longTask?(random()%10<8?1:0):(random()%2);expressionUntil_=elapsed+2.5f;nextExpression_=elapsed+45+random()%31;}
         p.workRandomAngry=frame.active&&elapsed<expressionUntil_&&expression_==0;
         bool dizzy=frame.active&&elapsed<expressionUntil_&&expression_==1;
@@ -99,7 +102,7 @@ public:
     }
 private:
     bool previousDizzy_=false;float blinkStart_=-100;
-    bool wasDragging_=false;float lastRealSound_=0;
+    bool wasDragging_=false;
     PhysicalKey left_=PhysicalKey::F,right_=PhysicalKey::J;float keyUntil_=0,nextExpression_=55,expressionUntil_=0;int expression_=0;
     template<class P,class S,class K,class E>static void emit(P& p,const S& settings,const K& skin,const E& input,PhysicalKey key,bool force){auto copy=settings;copy.showKeyBadges=force||p.workShowBubbles;bool previous=p.workShowBubbles;if(force)p.workShowBubbles=true;
 #ifdef _WIN32

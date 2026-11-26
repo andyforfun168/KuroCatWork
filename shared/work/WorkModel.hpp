@@ -147,8 +147,9 @@ public:
         return false;
     }
     TypingFrame typing(double dt, bool dragging, bool petting, bool realInput) {
+        (void)realInput; // Task-driven typing is independent of physical keyboard activity.
         TypingFrame frame;
-        frame.active = enabled && options.autonomousTyping && running() && !waiting() && !dragging && !petting && !realInput;
+        frame.active = enabled && options.autonomousTyping && running() && !waiting() && !dragging && !petting;
         if (!frame.active) return frame;
         activeTypingTime_ += std::clamp(dt, 0.0, 0.1);
         // Slow thinking phrases occur once or twice per active minute, for exactly three seconds.

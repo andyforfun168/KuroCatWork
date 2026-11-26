@@ -78,7 +78,7 @@ inline std::string codexBinary(){
 inline Quota fetchCodex(const std::atomic<bool>& cancelled) {
     Process child;Quota q;q.message="Codex CLI unavailable or not signed in";
     if(!child.start({codexBinary(),"app-server","--listen","stdio://"})){return q;}
-    if(!child.write("{\"id\":1,\"method\":\"initialize\",\"params\":{\"clientInfo\":{\"name\":\"kurocat_work\",\"version\":\"1.4.4\"},\"capabilities\":{\"experimentalApi\":true}}}\n")){return q;}
+    if(!child.write("{\"id\":1,\"method\":\"initialize\",\"params\":{\"clientInfo\":{\"name\":\"kurocat_work\",\"version\":\"1.4.6\"},\"capabilities\":{\"experimentalApi\":true}}}\n")){return q;}
     std::string buffer;
     auto response=[&](int id,double timeout)->Json{
         double until=wallNow()+timeout;
@@ -98,7 +98,7 @@ inline Quota fetchClaude(const std::atomic<bool>& cancelled) {
     if(token.empty()||token.find_first_of("\r\n\"")!=std::string::npos){return q;}
     std::string result;
 #ifdef _WIN32
-    HINTERNET session=WinHttpOpen(L"KuroCatWork/1.4.4",WINHTTP_ACCESS_TYPE_DEFAULT_PROXY,WINHTTP_NO_PROXY_NAME,WINHTTP_NO_PROXY_BYPASS,0);
+    HINTERNET session=WinHttpOpen(L"KuroCatWork/1.4.6",WINHTTP_ACCESS_TYPE_DEFAULT_PROXY,WINHTTP_NO_PROXY_NAME,WINHTTP_NO_PROXY_BYPASS,0);
     if(!session){return q;}WinHttpSetTimeouts(session,3000,3000,3000,3000);
     DWORD tls=WINHTTP_FLAG_SECURE_PROTOCOL_TLS1_2;WinHttpSetOption(session,WINHTTP_OPTION_SECURE_PROTOCOLS,&tls,sizeof(tls));
     HINTERNET connection=WinHttpConnect(session,L"api.anthropic.com",INTERNET_DEFAULT_HTTPS_PORT,0);
