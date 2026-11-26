@@ -1,0 +1,8 @@
+# Local builds and release uploads
+KuroCatWork.app/
+release/
+validation/
+.DS_Store
+.swiftpm/
+.build/
+*.dSYM/
