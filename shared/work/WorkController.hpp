@@ -67,7 +67,7 @@ public:
                 if(task!=result->tasks.end()){if(hook.changedAt>=task->changedAt&&(hook.turn.empty()||task->turn.empty()||hook.turn==task->turn)){task->state=hook.state;task->changedAt=hook.changedAt;}}
                 else result->tasks.push_back(hook);
             }
-            if(model.options.selection==Selection::Automatic)model.detected.insert(result->providers.begin(),result->providers.end());
+            if(model.options.selection==Selection::Automatic)for(auto tool:result->providers)if(model.detected.insert(tool).second)queueBirth(tool==Tool::Codex?"quota:codex":"quota:claude",tool);
             for(const auto& task:result->tasks)if(!model.tasks.count(task.key)&&model.shows(task.tool)&&birthQueue.size()<3)queueBirth(task.key,task.tool);
             auto previousTools=model.detected;model.merge(result->tasks);
             if(model.options.selection==Selection::Automatic)for(auto tool:model.detected)if(!previousTools.count(tool))queueBirth(tool==Tool::Codex?"quota:codex":"quota:claude",tool);
