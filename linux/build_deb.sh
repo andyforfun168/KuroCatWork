@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")" && pwd)"
-VERSION="${1:-1.4.5}"
+VERSION="${1:-1.4.6}"
 ARCH="$(dpkg --print-architecture)"
 PKG_DIR="$(mktemp -d)"
 trap 'rm -rf "$PKG_DIR"' EXIT
