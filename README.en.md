@@ -7,7 +7,6 @@
 
 <p align="center">
   <a href="https://github.com/andyforfun168/KuroCatWork/releases/latest"><img src="https://img.shields.io/github/v/release/andyforfun168/KuroCatWork?style=flat-square&amp;label=Release" alt="Release"/></a>
-  <img src="https://img.shields.io/github/downloads/andyforfun168/KuroCatWork/total?style=flat-square&amp;label=Downloads" alt="Downloads"/>
   <img src="https://img.shields.io/badge/Work%20Mode-macOS%2011%2B-555?style=flat-square" alt="Work Mode: macOS 11+"/>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-8b5cf6?style=flat-square" alt="MIT License"/></a>
 </p>
