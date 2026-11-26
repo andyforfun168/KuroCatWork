@@ -1,0 +1,6 @@
+# Native platform implementations are maintained application source, not vendored/generated code.
+windows/** linguist-vendored=false linguist-generated=false
+linux/** linguist-vendored=false linguist-generated=false
+shared/** linguist-vendored=false linguist-generated=false
+*.cpp linguist-language=C++
+*.hpp linguist-language=C++
