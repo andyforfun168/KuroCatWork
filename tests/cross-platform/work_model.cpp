@@ -9,7 +9,9 @@ int main() {
     m.enter(10);
     m.merge({task});
     assert(m.running() && m.typing(.016,false,false,false).active);
-    assert(!m.typing(.016,false,false,true).active); // Real input owns the paws.
+    assert(m.typing(.016,false,false,true).active); // Physical typing cannot interrupt autonomous work.
+    assert(!m.typing(.016,true,false,true).active); // Dragging still pauses work.
+    assert(!m.typing(.016,false,true,true).active); // Petting still pauses work.
     task.state=State::Awaiting; task.changedAt=20; m.merge({task});
     assert(m.waiting() && !m.typing(.016,false,false,false).active);
     assert(!m.angryWaiting(319) && m.angryWaiting(320));
