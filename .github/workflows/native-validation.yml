@@ -107,7 +107,7 @@ jobs:
             timeout 15s xvfb-run -a linux/kurocatwork --smoke-test
             g++ -std=c++17 -O2 tests/cross-platform/render.cpp -o /tmp/render $(pkg-config --cflags --libs gtk+-3.0 cairo x11 xi) -lpthread -lstdc++fs
             /tmp/render
-            bash linux/build_deb.sh 1.4.5
+            bash linux/build_deb.sh 1.4.6
           '
       - name: Package Linux portable release
         shell: bash
