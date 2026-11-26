@@ -3,6 +3,10 @@ setbuf(stdout,nil)
 let workTestDefaults=UserDefaults(suiteName:"KuroCat.LiveValidation."+UUID().uuidString)!
 var count=0
 func check(_ value:Bool,_ name:String){if !value{print("FAILED:",name);fatalError(name)};count+=1}
+check(WorkInteractionPolicy.autonomousTyping(running:true,waiting:false,dragging:false,petting:false,realTyping:true),"Physical typing does not interrupt autonomous work")
+check(!WorkInteractionPolicy.autonomousTyping(running:true,waiting:true,dragging:false,petting:false,realTyping:true),"Awaiting still pauses autonomous work")
+check(!WorkInteractionPolicy.autonomousTyping(running:true,waiting:false,dragging:true,petting:false,realTyping:true),"Dragging still pauses autonomous work")
+check(!WorkInteractionPolicy.autonomousTyping(running:true,waiting:false,dragging:false,petting:true,realTyping:true),"Petting still pauses autonomous work")
 let a: [String:Any] = ["rateLimitsByLimitId":["codex":["primary":["usedPercent":31,"windowDurationMins":10080,"resetsAt":2000000000]]]]
 let quota=LiveParsing.codexQuota(a)!
 check(quota.short == nil,"No invented short window")
@@ -55,6 +59,15 @@ check(sessions.activity(log.path,claude:false)?.state == .cancelled,"Rotated/tru
 CatSettings.shared.isWorkMode=true
 workTestDefaults.set("both",forKey:"KuroCat.WorkTools")
 let model=WorkModeExperience()
+CatSettings.shared.workAutoTyping=true
+model.tasks=[WorkTaskRecord(id:90,tool:.codex,title:"Routing check",state:.running,started:0,changed:0)]
+check(model.ignoresPhysicalKeyboard,"Running autonomous work owns the keyboard")
+CatSettings.shared.workAutoTyping=false
+check(!model.ignoresPhysicalKeyboard,"Disabling autonomy restores physical keyboard animation")
+CatSettings.shared.workAutoTyping=true
+model.tasks[0].state = .awaiting
+check(!model.ignoresPhysicalKeyboard,"Awaiting state preserves physical keyboard animation without sound")
+model.tasks=[]
 let now=Date().timeIntervalSince1970
 func task(_ key:String,_ state:WorkState,_ start:Double,_ changed:Double)->LiveTask{LiveTask(key:key,tool:.codex,title:"Test",state:state,started:start,changed:changed,link:"codex://threads/"+id,project:"test",source:"CODEX DESKTOP")}
 model.mergeLive([task("old",.completed,now-100,now-80)])
