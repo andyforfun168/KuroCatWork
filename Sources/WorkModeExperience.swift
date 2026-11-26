@@ -30,7 +30,7 @@ struct WorkPromotion {
 }
 struct WorkInteractionPolicy {
     static func autonomousTyping(running: Bool, waiting: Bool, dragging: Bool, petting: Bool, realTyping: Bool) -> Bool {
-        running && !waiting && !dragging && !petting && !realTyping
+        running && !waiting && !dragging && !petting
     }
 }
 final class WorkModeExperience: NSObject {
@@ -83,7 +83,6 @@ final class WorkModeExperience: NSObject {
     private var emitted = Set<Int>()
     private var lastAutoKey: Double = -100
     private var previousSynthetic = Set<PhysicalKey>()
-    private var previousSoundKeys = Set<PhysicalKey>()
     private var typingCadence=WorkTypingCadence()
     private var autoTypingPhase:Double=0
     private var emotionStart: Double = 0
@@ -122,6 +121,9 @@ final class WorkModeExperience: NSObject {
         }
     }
     var waiting: Bool { visibleTasks.contains { $0.state == .awaiting } }
+    var ignoresPhysicalKeyboard: Bool {
+        CatSettings.shared.isWorkMode && CatSettings.shared.workAutoTyping && !waiting && visibleTasks.contains{$0.state == .running}
+    }
     var allowsPetting: Bool { !CatSettings.shared.isWorkMode || !waiting }
     static func workSpinAdvance(dt:CGFloat,workDizzy:CGFloat,recoveringSpiral:Bool,naturalDizzy:CGFloat)->CGFloat {
         (workDizzy>0.01 || recoveringSpiral) && naturalDizzy<=0.01 ? min(dt,0.05)*7.5 : 0
@@ -279,7 +281,6 @@ final class WorkModeExperience: NSObject {
         let p=window.catView.physics,engine=InputEngine.shared,active=CatSettings.shared.isWorkMode
         WorkSounds.shared.configure(enabled:soundEnabled,workMode:active)
         if active != lastMode {
-            previousSoundKeys=engine.activeKeys
             if active {
                 exitFadeElapsed=nil
                 chooseToolsIfNeeded();lastBusy=elapsed
@@ -319,11 +320,9 @@ final class WorkModeExperience: NSObject {
         let petting=p.petHeadIntensity>0.05 || p.petBodyIntensity>0.05
         engine.pollMouse(dt:dt)
         let now=CACurrentMediaTime()
-        if !dragging && !engine.activeKeys.subtracting(previousSoundKeys).isEmpty {WorkSounds.shared.key(at:now)}
-        previousSoundKeys=engine.activeKeys
         let realTyping = !engine.activeKeys.isEmpty || now-engine.lastKeyActivityTime<0.35
-        p.workRealTyping=realTyping
-        if !dragging && !realTyping && !petting && elapsed-lastAutoKey>0.35,
+        p.workRealTyping=realTyping && !ignoresPhysicalKeyboard
+        if !dragging && !petting && elapsed-lastAutoKey>0.35,
            let key=pendingBirths.first {
             pendingBirths.removeFirst();emitted.insert(key)
             if !tasks.contains(where:{$0.id==key && $0.read}) {
@@ -372,10 +371,10 @@ final class WorkModeExperience: NSObject {
             }
             for key in synthetic where !previousSynthetic.contains(key){p.triggerKeyDown(key,at:now);WorkSounds.shared.key(at:now)}
         }
-        let spaceHold=elapsed>=lastAutoKey && elapsed-lastAutoKey<0.16 && !dragging && !realTyping
+        let spaceHold=elapsed>=lastAutoKey && elapsed-lastAutoKey<0.16 && !dragging
         if spaceHold {synthetic=[.space];p.previewAwaiting=false}
         previousSynthetic=Set(synthetic)
-        if auto || spaceHold {
+        if auto || spaceHold || ignoresPhysicalKeyboard {
             p.step(dt:dt,windowFrameInScreen:window.frame,scripted:ScriptedFrameInput(now:now,activeKeys:Set(synthetic),orderedKeys:synthetic,mouseScreenPos:engine.lastMouseLocation,mouseVelocity:.zero,leftMouseDown:false,rightMouseDown:false,lastMouseMoveTime:now-3,lastMouseClickTime:engine.lastMouseClickTime,lastKeyActivityTime:now))
         } else {p.step(dt:dt,windowFrameInScreen:window.frame)}
         for key in Array(promotions.keys) {

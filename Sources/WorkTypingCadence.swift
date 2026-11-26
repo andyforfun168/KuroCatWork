@@ -1,6 +1,6 @@
 import Foundation
 
-/// Tracks active autonomous typing time; user input, awaiting and dragging pause this clock.
+/// Tracks active autonomous typing time; awaiting, petting and dragging pause this clock; physical typing does not.
 struct WorkTypingCadence {
     struct Pause {
         var start:Double

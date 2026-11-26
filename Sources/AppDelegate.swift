@@ -45,6 +45,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         let engine = InputEngine.shared
         engine.onKeyDown = { [weak self] key in
             DispatchQueue.main.async {
+                guard !WorkModeExperience.shared.ignoresPhysicalKeyboard else { return }
                 self?.overlayWindow.catView.physics.triggerKeyDown(key)
             }
         }
