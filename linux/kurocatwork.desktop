@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=KuroCatWork
+Name[zh_CN]=KuroCatWork AI 工作桌宠
+Comment=A native cat companion for Codex and Claude work
+Comment[zh_CN]=陪你打字、查看 Codex 和 Claude 额度与任务的桌面小猫
+Exec=kurocatwork
+Icon=kurocatwork
+Terminal=false
+Type=Application
+Categories=Utility;Amusement;
+StartupNotify=false
