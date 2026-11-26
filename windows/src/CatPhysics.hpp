@@ -554,7 +554,7 @@ public:
         }
         sleepiness = 0.0f;
 
-        if (settings.showKeyBadges) {
+        if (settings.showKeyBadges && (!workMode || workShowBubbles)) {
             spawnFloatingKeycap(keyBadgeLabel(key), pt, now);
         }
     }
