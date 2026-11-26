@@ -101,12 +101,13 @@ private:
     bool previousDizzy_=false;float blinkStart_=-100;
     bool wasDragging_=false;float lastRealSound_=0;
     PhysicalKey left_=PhysicalKey::F,right_=PhysicalKey::J;float keyUntil_=0,nextExpression_=55,expressionUntil_=0;int expression_=0;
-    template<class P,class S,class K,class E>static void emit(P& p,const S& settings,const K& skin,const E& input,PhysicalKey key,bool force){auto copy=settings;copy.showKeyBadges=force||p.workShowBubbles;
+    template<class P,class S,class K,class E>static void emit(P& p,const S& settings,const K& skin,const E& input,PhysicalKey key,bool force){auto copy=settings;copy.showKeyBadges=force||p.workShowBubbles;bool previous=p.workShowBubbles;if(force)p.workShowBubbles=true;
 #ifdef _WIN32
         p.triggerKeyDown(key,copy,skin.typingStyle==SkinTypingStyle::Douni,&input.activeKeys);
 #else
         p.triggerKeyDown(key,copy,skin.typingStyle,&input);
 #endif
+        p.workShowBubbles=previous;
     }
 };
 }
