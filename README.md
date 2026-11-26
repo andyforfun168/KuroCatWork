@@ -1,19 +1,24 @@
-# 🐱 KuroCatWork
+<h1 align="center">🐱 KuroCatWork</h1>
 
 <p align="center">
-  <b>一只陪你打字，也陪 AI 干活的桌面小猫。</b><br/>
-  普通陪伴 × Codex / Claude 工作模式 · 原生 macOS · 四款皮肤 · 2.5D 转头
+  <b>陪你打字，也陪 AI 干活的原生桌面萌猫。</b><br/>
+  普通陪伴与工作模式 · Codex / Claude · 任务泡泡 · 共通皮肤
+</p>
+
+<p align="center">
+  <a href="https://github.com/andyforfun168/KuroCatWork/releases/latest"><img src="https://img.shields.io/github/v/release/andyforfun168/KuroCatWork?style=flat-square&amp;label=Release" alt="Release"/></a>
+  <img src="https://img.shields.io/github/downloads/andyforfun168/KuroCatWork/total?style=flat-square&amp;label=Downloads" alt="Downloads"/>
+  <img src="https://img.shields.io/badge/Work%20Mode-macOS%2011%2B-555?style=flat-square" alt="Work Mode: macOS 11+"/>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-8b5cf6?style=flat-square" alt="MIT License"/></a>
 </p>
 
 <p align="center">
   <b>简体中文</b> | <a href="README.en.md">English</a> ·
-  <a href="https://github.com/andyforfun168/KuroCatWork/releases/latest">⬇️ 下载最新版</a> ·
-  <a href="https://github.com/andyforfun168/KuroCatWork/releases/download/v1.4.4/KuroCatWork-demo.mp4">🎬 竖屏演示</a> ·
-  <a href="https://github.com/chanke17/KuroCat">🐾 原作 KuroCat</a> ·
-  <a href="https://workshop.kurocat.cc/">🎨 原作皮肤工坊</a>
+  <a href="https://github.com/andyforfun168/KuroCatWork/releases/latest">⬇️ 下载</a> ·
+  <a href="https://github.com/andyforfun168/KuroCatWork/releases/download/v1.4.4/KuroCatWork-demo.mp4">🎬 演示</a>
 </p>
 
-> **与原作的关系**：KuroCatWork 基于 [chanke17/KuroCat](https://github.com/chanke17/KuroCat) 开发，保留原作者署名及 MIT 许可证，由 [andyforfun168](https://github.com/andyforfun168) 独立维护，主要发展 **Codex / Claude 工作模式**及相关互动。喜欢纯桌宠和原作跨平台体验，可以选择 KuroCat；想让桌宠陪着 AI 任务一起工作，可以选择 KuroCatWork。原 fork 保留在 [KuroCatLocal](https://github.com/andyforfun168/KuroCatLocal)，本仓库是独立主仓库，并非原作者的官方版本。
+> 基于 [chanke17/KuroCat](https://github.com/chanke17/KuroCat) 的独立工作模式版本，保留原作者署名与 MIT 许可证。
 
 <p align="center">
   <a href="https://github.com/andyforfun168/KuroCatWork/releases/download/v1.4.4/KuroCatWork-demo.mp4"><img src="assets/work-mode.png" width="270" alt="工作模式：额度与任务泡泡"/></a>
@@ -152,6 +157,8 @@ KuroCatWork/
 ```
 
 ## 🤝 致谢与许可证
+
+KuroCatWork 由 andyforfun168 独立维护，并非原作者的官方版本。原 fork 保留在 [KuroCatLocal](https://github.com/andyforfun168/KuroCatLocal)。喜欢纯桌宠与原作平台版本，可选择 KuroCat；希望小猫陪着 Codex / Claude 工作，可选择 KuroCatWork。
 
 - [chanke17 / KuroCat](https://github.com/chanke17/KuroCat)：原生桌宠基础、角色、美术与互动生态。
 - [andyforfun168](https://github.com/andyforfun168)：KuroCatWork 工作模式、相关交互与本仓库维护。

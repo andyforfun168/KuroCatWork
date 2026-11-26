@@ -1,19 +1,24 @@
-# 🐱 KuroCatWork
+<h1 align="center">🐱 KuroCatWork</h1>
 
 <p align="center">
-  <b>A desktop cat that types with you — and keeps you company while your AI works.</b><br/>
-  Companion + Codex / Claude Work Mode · Native macOS · Four Skins · 2.5D Head Tracking
+  <b>A native desktop cat for typing, companionship and AI work.</b><br/>
+  Companion & Work Modes · Codex / Claude · Task Bubbles · Shared Skins
+</p>
+
+<p align="center">
+  <a href="https://github.com/andyforfun168/KuroCatWork/releases/latest"><img src="https://img.shields.io/github/v/release/andyforfun168/KuroCatWork?style=flat-square&amp;label=Release" alt="Release"/></a>
+  <img src="https://img.shields.io/github/downloads/andyforfun168/KuroCatWork/total?style=flat-square&amp;label=Downloads" alt="Downloads"/>
+  <img src="https://img.shields.io/badge/Work%20Mode-macOS%2011%2B-555?style=flat-square" alt="Work Mode: macOS 11+"/>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-8b5cf6?style=flat-square" alt="MIT License"/></a>
 </p>
 
 <p align="center">
   <a href="README.md">简体中文</a> | <b>English</b> ·
   <a href="https://github.com/andyforfun168/KuroCatWork/releases/latest">⬇️ Download</a> ·
-  <a href="https://github.com/andyforfun168/KuroCatWork/releases/download/v1.4.4/KuroCatWork-demo.mp4">🎬 Demo</a> ·
-  <a href="https://github.com/chanke17/KuroCat">🐾 Original KuroCat</a> ·
-  <a href="https://workshop.kurocat.cc/">🎨 Original Skin Workshop</a>
+  <a href="https://github.com/andyforfun168/KuroCatWork/releases/download/v1.4.4/KuroCatWork-demo.mp4">🎬 Demo</a>
 </p>
 
-> **Relationship to the original:** KuroCatWork is based on [chanke17/KuroCat](https://github.com/chanke17/KuroCat), with the original copyright and MIT license preserved. [andyforfun168](https://github.com/andyforfun168) maintains this independent work-mode project. The earlier fork remains at [KuroCatLocal](https://github.com/andyforfun168/KuroCatLocal).
+> Based on [chanke17/KuroCat](https://github.com/chanke17/KuroCat). An independent work-mode edition, with the original attribution and MIT license preserved.
 
 <p align="center">
   <img src="assets/work-mode.png" width="300" alt="Work mode with quota and task bubbles"/>
@@ -147,6 +152,8 @@ KuroCatWork/
 Build with `bash build.sh` using Xcode Command Line Tools. See [development notes](docs/DEVELOPMENT.md); run `bash tests/run.sh` for isolated checks.
 
 ## 🙏 Credits and license
+
+KuroCatWork is maintained independently by andyforfun168 and is not an official upstream release. The earlier fork remains at [KuroCatLocal](https://github.com/andyforfun168/KuroCatLocal). Choose original KuroCat for its standalone pet experience and upstream platform releases, or KuroCatWork for the Codex / Claude workflow.
 
 - [chanke17/KuroCat](https://github.com/chanke17/KuroCat): original pet, rendering, interactions and skin ecosystem.
 - [andyforfun168](https://github.com/andyforfun168): work-mode experience, art adaptations and maintenance of this repository.
