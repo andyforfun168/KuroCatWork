@@ -375,7 +375,7 @@ public:
     std::vector<PurrSparkle> sparkles;
 
     float workBlinkClosure=0;
-    bool workShowBubbles=true,workMode=false,workAwaiting=false,workAngry=false,workAutonomous=false,workRandomAngry=false,workDizzy=false;
+    bool workExclusiveKeyboard=false,workShowBubbles=true,workMode=false,workAwaiting=false,workAngry=false,workAutonomous=false,workRandomAngry=false,workDizzy=false;
     std::unordered_set<PhysicalKey> workKeys;
     float time = 0.0f;
     float tailPhase = 0.0f;
@@ -679,10 +679,11 @@ public:
         time += dt;
 
         double now = nowSeconds();
-        auto activeKeys = engine.activeKeys;
-        if(engine.activeKeys.empty())activeKeys.insert(workKeys.begin(),workKeys.end());
+        const bool exclusive=workMode&&workExclusiveKeyboard;
+        auto activeKeys = exclusive ? workKeys : engine.activeKeys;
         auto orderedKeys = engine.pressedOrder;
-        if(engine.activeKeys.empty())for(auto key:workKeys)orderedKeys.push_back(key);
+        if(exclusive){orderedKeys.clear();for(auto key:workKeys)orderedKeys.push_back(key);}
+        else if(engine.activeKeys.empty()){activeKeys.insert(workKeys.begin(),workKeys.end());for(auto key:workKeys)orderedKeys.push_back(key);}
 
         if (now - lastPetTime_ > 0.28) {
             petHeadIntensity = std::max(0.0f, petHeadIntensity - dt * 1.4f);

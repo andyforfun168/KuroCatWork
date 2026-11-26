@@ -36,7 +36,7 @@
 #include <fcntl.h>
 #include <glib-unix.h>
 
-#define KUROCAT_VERSION_STR "1.4.5"
+#define KUROCAT_VERSION_STR "1.4.6"
 static constexpr const char* APP_VERSION = KUROCAT_VERSION_STR;
 // Other KuroCat builds scan installed binaries for this marker (see readBinaryVersion) to find the
 // newest copy WITHOUT executing it. Always derived from KUROCAT_VERSION_STR.
@@ -2979,7 +2979,8 @@ int main(int argc, char** argv) {
         } else if (app.input.totalKeystrokesToday % 10 == 0) {
             CatSettings::saveStats(app.statsDay, app.input.totalKeystrokesToday, app.physics.totalPetSessions);
         }
-        app.physics.triggerKeyDown(k, app.settings, activeSkin(app).typingStyle, &app.input);
+        if(!app.work.controller.ignoresPhysicalKeyboard()&&!(app.work.controller.model.enabled&&app.physics.workExclusiveKeyboard))
+        if(!app.work.controller.ignoresPhysicalKeyboard())app.physics.triggerKeyDown(k, app.settings, activeSkin(app).typingStyle, &app.input);
     };
     app.input.onMouseClick = [&](int btn, bool down) { app.physics.triggerMouseClick(btn, down, app.settings, activeSkin(app).renderStyle); };
     app.input.start();
