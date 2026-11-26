@@ -6,9 +6,9 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/andyforfun168/KuroCatWork/releases/latest"><img src="https://img.shields.io/github/v/release/andyforfun168/KuroCatWork?style=flat-square&amp;label=Release" alt="Release"/></a>
-  <img src="https://img.shields.io/badge/Platform-macOS%20%7C%20Windows%20%7C%20Linux-555?style=flat-square" alt="macOS · Windows · Linux"/>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-8b5cf6?style=flat-square" alt="MIT License"/></a>
+  <a href="https://github.com/andyforfun168/KuroCatWork/releases/latest"><img src="assets/badges/release.svg" alt="Release"/></a>
+  <img src="assets/badges/platform.svg" alt="macOS · Windows · Linux"/>
+  <a href="LICENSE"><img src="assets/badges/license.svg" alt="MIT License"/></a>
 </p>
 
 <p align="center">
