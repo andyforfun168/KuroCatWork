@@ -46,7 +46,7 @@ Your cat stays at the center of the experience. **Double-click** to switch betwe
 | **Sound and work rhythm** | **Blue / Brown / Red** switch sounds, bubble pops and pickup meows; typing starts and pauses signal task activity, with separate volumes | Sound choices, task integration and volume controls vary |
 | **Interactions and surprises** | Two-paw typing, thinking pauses, occasional expressions, waiting reminders and **spiral eyes after about 1.2 seconds of shaking** | Interaction rules and animations vary by project |
 
-<sub>Download size refers to the v1.4.4 universal macOS release. Native Windows x64 and Linux x86_64 / ARM64 work-mode packages are available; see platform requirements below.</sub>
+<sub>Sizes are approximate complete-package sizes for v1.4.6. Native Windows x64 and Linux x86_64 / ARM64 work-mode packages are available; see platform requirements below.</sub>
 
 ---
 
@@ -70,7 +70,7 @@ Your cat stays at the center of the experience. **Double-click** to switch betwe
   - Both manual and automatic exits fade out completed tasks. Re-entering retains unresolved awaiting and failed items, ready for you to handle when you return.
 
 - **🐾 A cat that thinks, works and occasionally gets grumpy**
-  - When a task runs and none are awaiting you, the cat looks down and types with both paws. Your real keyboard and mouse input take priority.
+  - When a task runs and none are awaiting you, the cat looks down and types with both paws. While autonomous typing is active, real keyboard input neither interrupts its cadence nor mixes into its animation.
   - It occasionally slows down for about **three seconds**, then smoothly returns to full speed. Random angry or spiral-eye expressions appear roughly once a minute; long tasks make dizziness more likely. Dizziness resolves through a quick double blink.
   - Awaiting tasks stop autonomous typing and make the cat look at you. After **five minutes**, it gets grumpy until you handle the request, while its paws still follow real input.
   - Autonomous typing, random expressions and keyboard bubbles have separate switches. With typing bubbles off, quota and task bars still appear through their space-key animation. Turning off random expressions preserves waiting reminders and shake-triggered dizziness.
@@ -78,7 +78,7 @@ Your cat stays at the center of the experience. **Double-click** to switch betwe
 - **🔊 Three keyboard sounds, bubble pops and a meow**
   - Sound is off by default and only plays in work mode. Choose **Blue, Brown or Red** switch recordings, with independent keyboard and meow volumes.
   - Quota and task bars have distinct short pop sounds, with their own switch and volume. Switching off sound or leaving work mode stops playback.
-  - **Hear the work:** with autonomous typing and sound enabled, the start and pause of typing help you notice task activity without watching the screen. Autonomous typing pauses when work finishes **or** awaits you; use the green or purple task bubble to confirm which. Real typing also makes sound; check the task bubble for its current status.
+  - **Hear the work:** with autonomous typing and sound enabled, the start and pause of typing help you notice task activity without watching the screen. Autonomous typing pauses when work finishes **or** awaits you; use the green or purple task bubble to confirm which. Only the cat’s own keystrokes trigger keyboard audio; your real keyboard input does not. Task bubbles distinguish waiting, completion and other pauses such as dragging or petting.
 
 - **🤏 Pick up the cat — and its work**
   - Drag anywhere on the cat, with double-clicks distinguished from drags. The grip stays near its back; the body, paws and tail have gentle inertia.
@@ -168,6 +168,9 @@ Use `windows/build.bat` from an MSVC x64 tools prompt, or `bash linux/build.sh` 
 ```text
 KuroCatWork/
 ├── Sources/       # Native macOS app, pet drawing, work monitoring and audio
+├── windows/       # Native Windows pet and work mode
+├── linux/         # Native Linux pet, installer and packaging
+├── shared/        # C++ state, input, audio, rendering and skin formats
 ├── Resources/     # Icon, app metadata and bundled local sound samples
 ├── assets/        # README screenshots and skin previews
 ├── docs/          # Build and release notes
@@ -178,6 +181,13 @@ KuroCatWork/
 ```
 
 Build with `bash build.sh` using Xcode Command Line Tools. See [development notes](docs/DEVELOPMENT.md); run `bash tests/run.sh` for isolated checks.
+
+## 👥 Contributors
+
+| Contributor | Contributions |
+| :--- | :--- |
+| [chanke17](https://github.com/chanke17) | Original [KuroCat](https://github.com/chanke17/KuroCat) pet foundation, character models, native platform implementations and skin ecosystem |
+| [andyforfun168](https://github.com/andyforfun168) | KuroCatWork Codex / Claude work mode, task and usage monitoring, interaction and art extensions, cross-platform adaptation and maintenance |
 
 ## 🙏 Credits and license
 
