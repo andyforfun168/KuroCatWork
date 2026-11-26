@@ -7,7 +7,7 @@ source, hook, audio, panel and accepted pickup-geometry code under `shared/work`
 ## Artwork and behavior
 
 The reference is the accepted KuroCatWork macOS v1.4.4 build 20261126.22.
-Its Swift sources are unchanged. The four built-in coats retain their compact
+The v1.4.6 input/audio correction changes work-mode routing without changing the accepted drawing geometry. The four built-in coats retain their compact
 back-grip pickup, original head/ear proportions, white orange-white/shorthair paws,
 held keyboard and mouse/tablet, rounded sleep and 1.2-second shake dizziness.
 Native font rasterization and platform color management may differ slightly.
@@ -17,7 +17,7 @@ commit `735970daf4858c77116458d13934b33ab269bcdd`; original MIT attribution rema
 ## Work mode
 
 Double-click toggles work mode. Ordinary mode cancels AI polling. Task checks use
-a six-second schedule and quota checks use sixty seconds. Real input takes priority;
+a six-second schedule and quota checks use sixty seconds. Autonomous work typing owns the keyboard while active; physical typing does not interrupt it or trigger keyboard sounds.
 waiting tasks stop autonomous typing. Completed tasks are dismissed on either
 manual or automatic mode exit; unread waiting and failure items are retained.
 The context menu includes tool selection, automatic detection, typing, expressions,
@@ -34,7 +34,7 @@ Terminal sessions without a deep link show source/project details instead.
 
 Run `windows/build.bat` from an MSVC x64 tools prompt, or `bash linux/build.sh`
 with GCC, pkg-config, GTK3, Cairo, X11 and XInput2 development packages installed.
-Linux packages: `bash linux/build_deb.sh 1.4.5`. Portable packages include sounds,
+Linux packages: `bash linux/build_deb.sh 1.4.6`. Portable packages include sounds,
 icons, license and per-user install scripts. Install scripts never replace KuroCat.
 
 The manual GitHub Actions workflow has read-only repository permissions. It builds
