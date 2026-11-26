@@ -3,6 +3,7 @@ using std::min;
 using std::max;
 #include <string>
 #include <iostream>
+#include <cassert>
 #ifdef _WIN32
 #include "../../windows/src/CatRenderer.hpp"
 #else
@@ -24,6 +25,13 @@ int main() {
     for (UINT i=0;i<count;++i) if (std::wstring(encoders[i].MimeType)==L"image/png") {png=encoders[i].Clsid;found=true;}
     if (!found) return 2;
 #endif
+    {CatPhysics p;CatSettings settings;p.workMode=true;p.workShowBubbles=false;settings.showKeyBadges=true;
+#ifdef _WIN32
+    p.triggerKeyDown(PhysicalKey::A,settings,false);
+#else
+    p.triggerKeyDown(PhysicalKey::A,settings,SkinTypingStyle::Standard);
+#endif
+    assert(p.floatingKeycaps.empty());}
     for(int coat=0;coat<4;++coat) for(int pose=0;pose<6;++pose) {
         CatPhysics p; CatSettings settings;
         settings.coatTheme=static_cast<CatCoatTheme>(coat);
