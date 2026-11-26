@@ -32,13 +32,21 @@
 
 Your cat stays at the center of the experience. **Double-click** to switch between an ordinary typing companion and a small AI-work monitor. Read quotas and task states beneath its keyboard, or listen to its typing while you focus elsewhere.
 
-| What you want to know | What the cat shows |
-| --- | --- |
-| Is anything running? | Keyboard lighting, two-handed typing and yellow task bubbles |
-| Does a task need me? | The cat stops autonomous typing, looks up and shows a purple waiting bubble |
-| How much allowance is left? | Blue Codex / orange Claude fill bars; hover for exact values and reset times |
-| Has it finished? | Green result bubbles; failed or terminated tasks appear red |
-| Can it stay a simple pet? | Ordinary mode stops AI monitoring; each work animation and sound is configurable |
+| Dimension | 🐱 KuroCatWork | Typical Electron / Web pet implementations |
+| :--- | :--- | :--- |
+| **Download size** | About **2.1 MB** for the current universal macOS ZIP, including four skins and sound samples | Bundled browser engines or other runtimes can add size; the total depends on the project |
+| **Memory / CPU** | **Native Swift + CoreGraphics rendering**; ordinary mode stops AI usage and task polling | Depends on page content, renderer processes and background logic |
+| **Input in games** | macOS uses **IOHIDManager global input monitoring** for games and everyday typing; Input Monitoring permission is required | Page-level keyboard events usually depend on focus; global input needs a native bridge |
+| **2.5D visuals** | Head tracking, hunting eyes, rounded sleep, and **inertial pickup with the keyboard and mouse / tablet** | Projects may use sprites, skeletal animation or 3D rendering |
+| **Skins and ecosystem** | Four built-ins and the original [2.5D Skin Workshop](https://workshop.kurocat.cc/); shared **`.kurocat` / `.kurokb`** formats work in work mode too | Asset formats vary; sharing across projects often requires adaptation |
+| **Privacy** | **Open source, with local input animation**; work mode reads connected tools' usage and task states, storing settings and task metadata locally | Data handling and network connections depend on the project |
+| **Companion / AI work** | **Double-click to switch**; keyboard lighting and AI monitoring activate in work mode | Task monitoring and mode switching depend on the project |
+| **Codex / Claude usage** | Blue / orange quota bubbles with remaining usage and reset times; one tool, both or automatic detection | Account connections and quota sources need their own integration |
+| **Tasks and reminders** | **Yellow running, purple waiting, green completed, red failed or terminated**; open the corresponding chat and let the cat remind you when needed | Lifecycle tracking and chat navigation depend on the project |
+| **Sound and work rhythm** | **Blue / Brown / Red** switch sounds, bubble pops and pickup meows; typing starts and pauses signal task activity, with separate volumes | Sound choices, task integration and volume controls vary |
+| **Interactions and surprises** | Two-paw typing, thinking pauses, occasional expressions, waiting reminders and **spiral eyes after about 1.2 seconds of shaking** | Interaction rules and animations vary by project |
+
+<sub>Download size refers to the v1.4.4 universal macOS release. Windows / Linux work-mode ports are in progress; available builds are listed in Releases.</sub>
 
 ---
 
