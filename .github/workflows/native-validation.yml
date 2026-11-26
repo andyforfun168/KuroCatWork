@@ -38,7 +38,7 @@ jobs:
       - name: Native GUI startup and work-mode smoke test
         shell: pwsh
         run: |
-          $petProcess = Start-Process -FilePath "$PWD/native/windows/KuroCat.exe" -ArgumentList "--smoke-test" -PassThru
+          $petProcess = Start-Process -FilePath "$PWD/native/windows/KuroCatWork.exe" -ArgumentList "--smoke-test" -PassThru
           if (-not $petProcess.WaitForExit(15000)) { $petProcess.Kill(); throw 'Native UI did not close cleanly' }
           if ($petProcess.ExitCode -ne 0) { throw "Native UI failed: $($petProcess.ExitCode)" }
       - name: Native visual snapshots
@@ -48,12 +48,22 @@ jobs:
           cl /nologo /std:c++17 /EHsc /utf-8 native\tests\cross-platform\render.cpp /Fe:render.exe /link gdiplus.lib user32.lib gdi32.lib ole32.lib
           if errorlevel 1 exit /b 1
           render.exe
+      - name: Package Windows portable release
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force release/KuroCatWork/Resources | Out-Null
+          Copy-Item native/windows/KuroCatWork.exe release/KuroCatWork/
+          Copy-Item native/Resources/WorkSounds release/KuroCatWork/Resources/ -Recurse
+          Copy-Item native/LICENSE release/KuroCatWork/
+          Compress-Archive -Path release/KuroCatWork -DestinationPath KuroCatWork-Windows-x64.zip
+          Get-FileHash KuroCatWork-Windows-x64.zip -Algorithm SHA256
       - uses: actions/upload-artifact@v4
         with:
           name: Windows-x64-validation-only
           path: |
-            native/windows/KuroCat.exe
+            native/windows/KuroCatWork.exe
             cat-*.png
+            KuroCatWork-Windows-x64.zip
   linux:
     strategy:
       matrix:
@@ -85,13 +95,24 @@ jobs:
             g++ -std=c++17 -Wall -Wextra -Werror tests/cross-platform/hooks.cpp -o /tmp/hooks -lstdc++fs -lpthread
             /tmp/hooks /tmp/kurocat-hooks
             bash linux/build.sh
-            timeout 15s xvfb-run -a linux/kurocat --smoke-test
+            timeout 15s xvfb-run -a linux/kurocatwork --smoke-test
             g++ -std=c++17 -O2 tests/cross-platform/render.cpp -o /tmp/render $(pkg-config --cflags --libs gtk+-3.0 cairo x11 xi) -lpthread -lstdc++fs
             /tmp/render
+            bash linux/build_deb.sh 1.4.5
           '
+      - name: Package Linux portable release
+        shell: bash
+        run: |
+          mkdir -p release/KuroCatWork/Resources
+          cp native/linux/kurocatwork native/linux/install.sh native/linux/uninstall.sh native/linux/kurocatwork.desktop native/linux/kurocatwork.png native/LICENSE release/KuroCatWork/
+          cp -R native/Resources/WorkSounds release/KuroCatWork/Resources/
+          tar -C release -czf KuroCatWork-Linux-${{ matrix.arch }}.tar.gz KuroCatWork
+          sha256sum KuroCatWork-Linux-${{ matrix.arch }}.tar.gz native/linux/*.deb
       - uses: actions/upload-artifact@v4
         with:
           name: Linux-${{ matrix.arch }}-validation-only
           path: |
-            native/linux/kurocat
+            native/linux/kurocatwork
             native/cat-*.png
+            native/linux/*.deb
+            KuroCatWork-Linux-*.tar.gz
