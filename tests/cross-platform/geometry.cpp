@@ -1,0 +1,3 @@
+#include "../../shared/work/AcceptedPickup.hpp"
+#include <cassert>
+int main(){using namespace kurowork;for(float lift:{0.f,.1f,.5f,1.f})for(float start:{0.f,.5f,1.f})for(float swing:{-.95f,0.f,.95f}){Pickup p(2,lift,start,swing,.2f,.4f,0,1,1,42.5f,1,-30,26,5,-14,1);assert(p.head.x<p.grip.x);assert(p.back.x>p.head.x);assert(p.frontLeft.tip.y>p.frontLeft.root.y);assert(std::hypot(p.frontLeft.tip.x-p.frontLeft.root.x,p.frontLeft.tip.y-p.frontLeft.root.y)<65);for(const auto* path:{&p.body,&p.face,&p.tail})for(const auto& s:path->segments)for(auto pt:{s.a,s.b,s.c})assert(std::isfinite(pt.x)&&std::isfinite(pt.y));} }
