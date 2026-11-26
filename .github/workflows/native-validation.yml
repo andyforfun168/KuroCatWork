@@ -45,7 +45,7 @@ jobs:
         shell: cmd
         run: |
           for /f "usebackq tokens=*" %%i in (`"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -property installationPath`) do call "%%i\VC\Auxiliary\Build\vcvars64.bat"
-          cl /nologo /std:c++17 /EHsc /utf-8 native\tests\cross-platform\render.cpp /Fe:render.exe /link gdiplus.lib user32.lib gdi32.lib ole32.lib
+          cl /nologo /std:c++17 /EHsc /utf-8 native\tests\cross-platform\render.cpp /Fe:render.exe /link gdiplus.lib user32.lib gdi32.lib ole32.lib winhttp.lib winmm.lib
           if errorlevel 1 exit /b 1
           render.exe
       - name: Package Windows portable release
@@ -63,6 +63,7 @@ jobs:
           path: |
             native/windows/KuroCatWork.exe
             cat-*.png
+            work-mode.png
             KuroCatWork-Windows-x64.zip
   linux:
     strategy:
@@ -114,5 +115,6 @@ jobs:
           path: |
             native/linux/kurocatwork
             native/cat-*.png
+            native/work-mode.png
             native/linux/*.deb
             KuroCatWork-Linux-*.tar.gz
