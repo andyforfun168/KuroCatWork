@@ -1,0 +1,80 @@
+name: Validate native ports (no publishing)
+on:
+  workflow_dispatch:
+    inputs:
+      revision:
+        description: Source branch to validate
+        required: true
+        default: codex/cross-platform
+permissions:
+  contents: read
+jobs:
+  windows-x64:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.revision }}
+      - name: Unpack native candidate
+        run: python -m zipfile -e ports/native-candidate.zip native
+      - name: Shared work-mode scenarios (MSVC)
+        shell: cmd
+        run: |
+          for /f "usebackq tokens=*" %%i in (`"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -property installationPath`) do call "%%i\VC\Auxiliary\Build\vcvars64.bat"
+          cl /nologo /std:c++17 /EHsc /W4 native\tests\cross-platform\work_model.cpp /Fe:work-model.exe
+          if errorlevel 1 exit /b 1
+          work-model.exe
+      - name: Native build (Windows 7 SP1 API baseline)
+        shell: cmd
+        run: |
+          for /f "usebackq tokens=*" %%i in (`"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -property installationPath`) do call "%%i\VC\Auxiliary\Build\vcvars64.bat"
+          call native\windows\build.bat
+      - name: Native visual snapshots
+        shell: cmd
+        run: |
+          for /f "usebackq tokens=*" %%i in (`"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -property installationPath`) do call "%%i\VC\Auxiliary\Build\vcvars64.bat"
+          cl /nologo /std:c++17 /EHsc /utf-8 native\tests\cross-platform\render.cpp /Fe:render.exe /link gdiplus.lib user32.lib gdi32.lib ole32.lib
+          if errorlevel 1 exit /b 1
+          render.exe
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Windows-x64-validation-only
+          path: |
+            native/windows/KuroCat.exe
+            cat-*.png
+  linux:
+    strategy:
+      matrix:
+        include:
+          - runner: ubuntu-24.04
+            arch: x86_64
+          - runner: ubuntu-24.04-arm
+            arch: arm64
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.revision }}
+      - name: Unpack native candidate
+        run: python -m zipfile -e ports/native-candidate.zip native
+      - name: Build against glibc 2.28 (Debian 10)
+        shell: bash
+        run: |
+          docker run --rm -v "$PWD":/src -w /src/native -e KUROCAT_MAX_GLIBC=2.28 debian:buster bash -euo pipefail -c '
+            sed -i -e "s|deb.debian.org|archive.debian.org|g" \
+                   -e "s|security.debian.org|archive.debian.org|g" \
+                   -e "/buster-updates/d" /etc/apt/sources.list
+            apt-get -o Acquire::Check-Valid-Until=false update
+            apt-get install -y --no-install-recommends g++ pkg-config libgtk-3-dev libcairo2-dev libx11-dev libxi-dev
+            g++ -std=c++17 -Wall -Wextra -Werror tests/cross-platform/work_model.cpp -o /tmp/work-model
+            /tmp/work-model
+            bash linux/build.sh
+            g++ -std=c++17 -O2 tests/cross-platform/render.cpp -o /tmp/render $(pkg-config --cflags --libs gtk+-3.0 cairo x11 xi) -lpthread
+            /tmp/render
+          '
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Linux-${{ matrix.arch }}-validation-only
+          path: |
+            native/linux/kurocat
+            native/cat-*.png
