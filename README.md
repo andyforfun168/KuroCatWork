@@ -7,7 +7,7 @@
 
 <p align="center">
   <a href="https://github.com/andyforfun168/KuroCatWork/releases/latest"><img src="https://img.shields.io/github/v/release/andyforfun168/KuroCatWork?style=flat-square&amp;label=Release" alt="Release"/></a>
-  <img src="https://img.shields.io/badge/Work%20Mode-macOS%2011%2B-555?style=flat-square" alt="Work Mode: macOS 11+"/>
+  <img src="https://img.shields.io/badge/Platform-macOS%20%7C%20Windows%20%7C%20Linux-555?style=flat-square" alt="macOS · Windows · Linux"/>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-8b5cf6?style=flat-square" alt="MIT License"/></a>
 </p>
 
@@ -34,9 +34,9 @@
 
 | 对比维度 | 🐱 KuroCatWork | 常见 Electron / Web 桌宠实现 |
 | :--- | :--- | :--- |
-| **安装包体积** | 当前 macOS 通用版压缩包约 **2.1 MB**，包含四款皮肤与声音素材 | 通常需要额外打包浏览器或其他运行时，体积取决于具体实现 |
-| **内存 / CPU 占用** | **原生 Swift + CoreGraphics 绘制**；切回普通模式即停止 AI 额度与任务轮询 | 资源占用取决于页面、渲染进程和后台逻辑 |
-| **游戏内按键捕获** | macOS 使用 **IOHIDManager 全局键鼠监听**，游戏与日常打字均可驱动动作；需要输入监控授权 | 网页内按键事件通常受焦点限制，全局输入需额外桥接 |
+| **安装包体积** | macOS 通用版约 **2.1 MB**、Windows x64 约 **1.5 MB**、Linux 便携版约 **1.2 MB**，包含四款皮肤与声音素材 | 通常需要额外打包浏览器或其他运行时，体积取决于具体实现 |
+| **内存 / CPU 占用** | **原生 Swift / C++17 绘制**；切回普通模式即停止 AI 额度与任务轮询 | 资源占用取决于页面、渲染进程和后台逻辑 |
+| **游戏内按键捕获** | macOS **IOHIDManager**、Windows **Raw Input**、Linux **XInput2 / evdev**，按平台授权后驱动全局键鼠动作 | 网页内按键事件通常受焦点限制，全局输入需额外桥接 |
 | **2.5D 视觉表现** | 鼠标跟随转头、捕猎大圆眼、圆润团睡，以及带惯性的**拎猫、键盘与鼠标 / 数位板** | 表现形式取决于项目，可采用贴图、骨骼或 3D 渲染 |
 | **皮肤与生态** | 四款内置皮肤；兼容原作 [2.5D 皮肤工坊](https://workshop.kurocat.cc/) 的 **`.kurocat` / `.kurokb`** 格式，导入后可用于工作模式 | 素材格式由各项目定义，跨项目使用通常需要适配 |
 | **隐私安全** | **开源，本地处理键鼠动画**；工作模式读取已连接工具的额度与任务状态，本地保存设置和任务元数据 | 数据处理方式与网络连接范围需查看各项目说明 |
@@ -46,7 +46,7 @@
 | **声音与工作节奏** | **青轴 / 茶轴 / 红轴**、气泡弹出声与拎起喵叫；敲击声的开始和暂停帮助感知任务动静，音量独立可调 | 音色、任务联动与音量控制取决于项目 |
 | **互动与彩蛋** | 自主双手打字、短暂停顿思考、随机小情绪、等待催促，以及**甩动约 1.2 秒的眩晕眼** | 互动规则与动画由各项目分别设计 |
 
-<sub>体积以 v1.4.4 macOS 通用版为准。Windows / Linux 工作模式正在适配；各平台的可下载版本以 Releases 为准。</sub>
+<sub>体积以 v1.4.4 macOS 通用版为准。Windows x64、Linux x86_64 / ARM64 现提供原生工作模式安装包；兼容要求见下方平台说明。</sub>
 
 ---
 
@@ -118,13 +118,30 @@
    - **Claude**：使用「连接 Claude 网页…」登录。Claude Code 本地会话可通过可选任务监听 hook 补充明确的等待审批／回答状态；安装前会提示并保留原有配置。
 5. 到 **右键 → 设置 → 工作模式**，按喜好设置自主打字、随机表情、键盘气泡、声音、轴体和三类音量。大小与方向在右键滑条里调整。
 
-**当前工作模式发布范围为 macOS。** Windows / Linux 用户可前往 [原作 KuroCat](https://github.com/chanke17/KuroCat)；本仓库不提供尚未适配的跨平台工作模式安装包。
+### 🪟 Windows · x64
+
+下载 **`KuroCatWork-Windows-x64.zip`**，完整解压后运行 `KuroCatWork.exe`。保留旁边的 `Resources` 文件夹，里面包含键盘声、气泡声和喵叫。双击小猫切换工作模式，右键 **工作模式**可选择工具、动画和声音。
+
+以 **Windows 7 SP1 / 8 / 10 / 11 x64** 为兼容目标，使用 Windows 7 API 基线和静态 C++ 运行库。当前自动构建及窗口启动测试运行在 Windows Server 2022；旧系统兼容性尚需对应设备实测。AI CLI 的系统要求独立于桌宠，旧系统上不可用的工具会显示 N/A。
+
+### 🐧 Linux · x86_64 / ARM64
+
+- 便携版：下载对应架构的 **`KuroCatWork-Linux-x86_64.tar.gz`** 或 **`KuroCatWork-Linux-arm64.tar.gz`**，解压后运行 `./kurocatwork`。也可运行 `bash install.sh` 安装到当前用户目录，无需管理员密码。
+- Debian / Ubuntu / 统信 UOS / 银河麒麟：提供 **`KuroCatWork-Linux-amd64.deb`** 和 **`KuroCatWork-Linux-arm64.deb`**，选择与系统架构一致的包。
+- 需要 **glibc 2.28+、GTK3 3.22+、Cairo、X11 / XInput2**。适用于满足依赖的 UOS / 麒麟等发行版；Wayland 全局监听受系统限制，建议 X11 或支持对应输入能力的 XWayland 环境。
+- 声音使用 PulseAudio / PipeWire 的 `paplay`；便携版若缺少声音，可通过发行版的软件管理器安装 `pulseaudio-utils`。
+
+### Windows / Linux 真实连接
+
+先安装并登录兼容当前系统的 **Codex CLI / Claude Code**。Codex 使用 `codex login`；Claude Code 使用其登录流程。额度与本地会话由小猫读取；等待审批 / 回答状态可在右键 **工作模式 → 连接任务监听**中启用对应 hook，原配置会保留并备份。
+
+这两个平台使用本地 CLI 连接，不包含 macOS 的 Claude 网页登录窗口。终端会话没有可用深链接时显示项目与来源，供你返回原终端处理；小猫不会自动批准。详细构建与验证范围见 [跨平台说明](docs/CROSS_PLATFORM_PORT.md)。
 
 ### 使用前了解
 
 - Codex / Claude 的本地数据结构和服务接口可能随版本变化；任务未出现时，先检查连接状态、对应工具是否登录，以及可选监听是否连接。
 - 「打开处理」是跳转，不是自动批准。Claude 连接需要用户自行完成登录；登录后即可查看账户额度。
-- 本版本沿用旧 KuroCat 的应用标识与设置路径以便迁移。**请退出另一只 KuroCat / KuroCatLocal 后使用**；同机不建议同时运行两者。设置尽量沿用，但更换签名后 macOS 可能要求重新授权输入监控。
+- macOS 版本沿用旧 KuroCat 的应用标识与设置路径以便迁移。**请退出另一只 KuroCat / KuroCatLocal 后使用**；同机不建议同时运行两者。设置尽量沿用，但更换签名后 macOS 可能要求重新授权输入监控。
 - 当前下载包不是 Apple 公证版。若 macOS 阻止首次打开，可到「系统设置 → 隐私与安全性」按系统提示允许本次打开。
 - 应用没有内置更新器，需要更新时手动下载本仓库 Release。
 
@@ -142,7 +159,9 @@
 
 ## 🛠️ 从源码构建
 
-需要 Xcode Command Line Tools（含 macOS SDK、Swift）及 macOS：
+Windows 使用 `windows/build.bat`（MSVC x64 开发者命令行）；Linux 使用 `bash linux/build.sh`，Debian 打包使用 `bash linux/build_deb.sh`。
+
+macOS 需要 Xcode Command Line Tools（含 macOS SDK、Swift）及 macOS：
 
 ```bash
 git clone https://github.com/andyforfun168/KuroCatWork.git

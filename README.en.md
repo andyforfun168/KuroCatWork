@@ -7,7 +7,7 @@
 
 <p align="center">
   <a href="https://github.com/andyforfun168/KuroCatWork/releases/latest"><img src="https://img.shields.io/github/v/release/andyforfun168/KuroCatWork?style=flat-square&amp;label=Release" alt="Release"/></a>
-  <img src="https://img.shields.io/badge/Work%20Mode-macOS%2011%2B-555?style=flat-square" alt="Work Mode: macOS 11+"/>
+  <img src="https://img.shields.io/badge/Platform-macOS%20%7C%20Windows%20%7C%20Linux-555?style=flat-square" alt="macOS · Windows · Linux"/>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-8b5cf6?style=flat-square" alt="MIT License"/></a>
 </p>
 
@@ -34,9 +34,9 @@ Your cat stays at the center of the experience. **Double-click** to switch betwe
 
 | Dimension | 🐱 KuroCatWork | Typical Electron / Web pet implementations |
 | :--- | :--- | :--- |
-| **Download size** | About **2.1 MB** for the current universal macOS ZIP, including four skins and sound samples | Bundled browser engines or other runtimes can add size; the total depends on the project |
-| **Memory / CPU** | **Native Swift + CoreGraphics rendering**; ordinary mode stops AI usage and task polling | Depends on page content, renderer processes and background logic |
-| **Input in games** | macOS uses **IOHIDManager global input monitoring** for games and everyday typing; Input Monitoring permission is required | Page-level keyboard events usually depend on focus; global input needs a native bridge |
+| **Download size** | About **2.1 MB** for universal macOS, **1.5 MB** for Windows x64 and **1.2 MB** for portable Linux, with four skins and sound samples | Bundled browser engines or other runtimes can add size; the total depends on the project |
+| **Memory / CPU** | **Native Swift / C++17 rendering**; ordinary mode stops AI usage and task polling | Depends on page content, renderer processes and background logic |
+| **Input in games** | **IOHIDManager** on macOS, **Raw Input** on Windows, **XInput2 / evdev** on Linux; global input follows platform permissions | Page-level keyboard events usually depend on focus; global input needs a native bridge |
 | **2.5D visuals** | Head tracking, hunting eyes, rounded sleep, and **inertial pickup with the keyboard and mouse / tablet** | Projects may use sprites, skeletal animation or 3D rendering |
 | **Skins and ecosystem** | Four built-ins and the original [2.5D Skin Workshop](https://workshop.kurocat.cc/); shared **`.kurocat` / `.kurokb`** formats work in work mode too | Asset formats vary; sharing across projects often requires adaptation |
 | **Privacy** | **Open source, with local input animation**; work mode reads connected tools' usage and task states, storing settings and task metadata locally | Data handling and network connections depend on the project |
@@ -46,7 +46,7 @@ Your cat stays at the center of the experience. **Double-click** to switch betwe
 | **Sound and work rhythm** | **Blue / Brown / Red** switch sounds, bubble pops and pickup meows; typing starts and pauses signal task activity, with separate volumes | Sound choices, task integration and volume controls vary |
 | **Interactions and surprises** | Two-paw typing, thinking pauses, occasional expressions, waiting reminders and **spiral eyes after about 1.2 seconds of shaking** | Interaction rules and animations vary by project |
 
-<sub>Download size refers to the v1.4.4 universal macOS release. Windows / Linux work-mode ports are in progress; available builds are listed in Releases.</sub>
+<sub>Download size refers to the v1.4.4 universal macOS release. Native Windows x64 and Linux x86_64 / ARM64 work-mode packages are available; see platform requirements below.</sub>
 
 ---
 
@@ -115,13 +115,30 @@ Your cat stays at the center of the experience. **Double-click** to switch betwe
    - **Claude:** connect and sign into the Claude web window. Optional local task hooks provide explicit permission/question states for supported terminal sessions; installation prompts you and preserves existing configuration.
 5. Open **Settings → Work Mode** for typing, random expressions, bubbles, sound, switch type and volume. Size and direction use context-menu sliders.
 
-**Work mode currently ships for macOS.** For Windows or Linux, visit [original KuroCat](https://github.com/chanke17/KuroCat). This repository does not offer unported work-mode builds for those systems.
+### 🪟 Windows · x64
+
+Download **`KuroCatWork-Windows-x64.zip`**, extract the entire folder and run `KuroCatWork.exe`. Keep its `Resources` folder beside the executable for keyboard, pop and meow sounds. Double-click the cat for work mode; use the **Work mode** context submenu for tools, animation and sounds.
+
+Targets **Windows 7 SP1 / 8 / 10 / 11 x64**, using the Windows 7 API baseline and a static C++ runtime. Automated compilation and GUI startup tests run on Windows Server 2022; older systems still require device testing. AI CLIs have separate OS requirements; unavailable tools display N/A.
+
+### 🐧 Linux · x86_64 / ARM64
+
+- Portable: download **`KuroCatWork-Linux-x86_64.tar.gz`** or **`KuroCatWork-Linux-arm64.tar.gz`**, extract and run `./kurocatwork`. Optional `bash install.sh` installs into your user directory without administrator privileges.
+- Debian / Ubuntu / UOS / Kylin: choose **`KuroCatWork-Linux-amd64.deb`** or **`KuroCatWork-Linux-arm64.deb`** for your architecture.
+- Requires **glibc 2.28+, GTK3 3.22+, Cairo and X11 / XInput2**. Compatible UOS/Kylin installations must satisfy these dependencies. Wayland restricts global input; prefer X11 or an XWayland environment with the required input support.
+- Audio uses PulseAudio / PipeWire's `paplay`. Portable users may need their distribution's `pulseaudio-utils` package.
+
+### Windows / Linux tool connections
+
+Install and sign into compatible **Codex CLI / Claude Code** versions first (`codex login` for Codex). The cat reads usage and local sessions. Optional task hooks in **Work mode → Connect task hooks** provide explicit permission/question states and preserve existing settings with a backup.
+
+These ports use local CLI connections and do not embed the macOS Claude web-login window. Terminal sessions without deep links show their project and source so you can return to the terminal. The cat does not grant approvals. See [native build and validation notes](docs/CROSS_PLATFORM_PORT.md).
 
 ### Practical notes
 
 Tool data formats and service interfaces can change. If a task is missing, check the connection status, tool sign-in and optional task-hook connection. Unavailable quota is clearly indicated. Open-to-handle buttons navigate to the chat rather than granting approval.
 
-The existing KuroCat bundle identifier and settings path are retained to help migration. **Do not run both cats at the same time.** Updates are downloaded manually from this repository's Releases.
+On macOS, the existing KuroCat bundle identifier and settings path are retained to help migration. **Do not run both cats at the same time.** Updates are downloaded manually from this repository's Releases.
 
 ## ⚙️ Settings
 
@@ -141,6 +158,10 @@ The context menu provides work-mode connections, skin choices, size/direction sl
 Keyboard/mouse input drives animation locally; it is not uploaded as task content. Work mode reads local session metadata and recent activity records, and uses your signed-in tool/service connections to request usage or task status. Task titles, unread states and settings are stored locally so they survive restarts. Optional hooks record task-state metadata, not tool inputs.
 
 Ordinary mode stops AI polling. Task actions open the corresponding chat for you to review. App updates are available from Releases.
+
+## 🛠️ Native builds
+
+Use `windows/build.bat` from an MSVC x64 tools prompt, or `bash linux/build.sh` with GTK3/Cairo/X11 development libraries. `bash linux/build_deb.sh` builds Debian packages. macOS uses the existing `bash build.sh` universal build.
 
 ## 📁 Project structure
 
