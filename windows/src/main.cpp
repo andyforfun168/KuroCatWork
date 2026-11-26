@@ -61,7 +61,7 @@ using std::max;
 
 namespace {
 
-constexpr const wchar_t* APP_VERSION = L"1.4.5";
+constexpr const wchar_t* APP_VERSION = L"1.4.6";
 constexpr const wchar_t* VERSION_PROP = L"KuroCatWorkVersion"; // set on the tray owner window so newer builds can take over older ones
 constexpr const wchar_t* TRAY_OWNER_CLASS = L"KuroCatWorkTrayOwnerClass";
 constexpr const wchar_t* OVERLAY_CLASS = L"KuroCatWorkOverlayWindowClass";
@@ -4519,7 +4519,8 @@ int WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, PWSTR, int) {
 
     CatSettings::saveStatsToRegistry(app.statsDay, app.input.totalKeystrokesToday, app.physics.totalPetSessions);
         }
-        app.physics.triggerKeyDown(k, app.settings, activeSkin(app).typingStyle == SkinTypingStyle::Douni, &app.input.activeKeys);
+        if(!app.work.controller.ignoresPhysicalKeyboard()&&!(app.work.controller.model.enabled&&app.physics.workExclusiveKeyboard))
+        if(!app.work.controller.ignoresPhysicalKeyboard())app.physics.triggerKeyDown(k, app.settings, activeSkin(app).typingStyle == SkinTypingStyle::Douni, &app.input.activeKeys);
     };
     app.input.onMouseClick = [&](int btn, bool down) {
         app.physics.triggerMouseClick(btn, down, app.settings, activeSkin(app).renderStyle == SkinRenderStyle::Douni || activeSkin(app).renderStyle == SkinRenderStyle::Beagle);
