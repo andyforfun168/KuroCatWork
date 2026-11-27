@@ -68,7 +68,7 @@ Your cat stays at the center of the experience. **Double-click** to switch betwe
   - Tasks are checked about every **6 seconds**. Show up to **three** by default, with more available to expand. Waiting tasks come first, then running tasks and unread results.
   - **Yellow: running · Purple: awaiting you · Green: completed · Red: failed or terminated.** Titles, status and elapsed time are always visible; hover for project, source and timestamps. Detail cards choose a position that fits the screen.
   - **Open to handle / View result / View details** jumps to the corresponding chat. Approval remains in Codex or Claude; the cat does not approve actions on your behalf. Terminal tasks without a usable chat link show available source details instead.
-  - Both manual and automatic exits fade out completed tasks. Re-entering retains unresolved awaiting and failed items, ready for you to handle when you return.
+  - Both manual and automatic exits fade out completed tasks. Re-entering restores tasks that are still running, alongside unresolved awaiting and failed items.
 
 - **🐾 A cat that thinks, works and occasionally gets grumpy**
   - When a task runs and none are awaiting you, the cat looks down and types with both paws. While autonomous typing is active, real keyboard input neither interrupts its cadence nor mixes into its animation.
