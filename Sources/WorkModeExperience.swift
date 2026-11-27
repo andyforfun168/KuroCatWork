@@ -254,7 +254,15 @@ final class WorkModeExperience: NSObject {
             let busy=item.state == .running || item.state == .awaiting
             if let i=tasks.firstIndex(where:{$0.key==item.key}) {
                 let newer=item.started>tasks[i].started+1
-                if newer {tasks[i].read=false;tasks[i].started=item.started;pendingBirths.append(tasks[i].id);emitted.remove(tasks[i].id);promotions.removeValue(forKey:tasks[i].id)}
+                // Mode exit hides active records locally, but a fresh busy snapshot must revive
+                // the same turn. Completion tombstones still suppress already viewed results.
+                let returningBusy = busy && tasks[i].read
+                if newer || returningBusy {
+                    tasks[i].read=false
+                    if newer {tasks[i].started=item.started}
+                    fading.removeValue(forKey:tasks[i].id)
+                    pendingBirths.append(tasks[i].id);emitted.remove(tasks[i].id);promotions.removeValue(forKey:tasks[i].id)
+                }
                 if tasks[i].state != item.state {tasks[i].changed=now}
                 if tasks[i].state == .awaiting && item.state != .awaiting {quietUntil=elapsed+2.5;emotion=0;nextEmotion=elapsed+Double.random(in:45...75)}
                 if carryoverTaskKeys.contains(item.key) {
