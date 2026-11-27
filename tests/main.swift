@@ -138,6 +138,22 @@ retention.mergeLive([task("retain-done",.completed,now,now+100),task("retain-wai
 retention.tasks[retention.tasks.firstIndex{$0.key=="retain-read"}!].read=true
 retention.prepareForModeExit()
 check(retention.tasks.filter{!$0.read}.map{$0.key!}.sorted()==["retain-fail","retain-wait"],"Only unread awaiting and failed survive automatic exit")
+
+let resume=WorkModeExperience()
+resume.mergeLive([task("resume-running",.running,now,now),task("resume-done",.completed,now,now+100)])
+resume.prepareForModeExit()
+resume.mergeLive([task("resume-running",.running,now,now),task("resume-done",.completed,now,now+100)])
+check(resume.visibleTasks.contains{$0.key=="resume-running" && !$0.read},"Same running turn returns after leaving and reentering work mode")
+check(resume.tasks.first{$0.key=="resume-done"}!.read,"Completed task stays cleared on the same refresh")
+resume.mergeLive([task("resume-running",.running,now,now)])
+check(resume.visibleTasks.filter{$0.key=="resume-running"}.count==1,"Repeated busy refresh never duplicates task")
+let restoredActive=WorkModeExperience()
+restoredActive.tasks=[WorkTaskRecord(id:10,tool:.codex,title:"Restored",state:.running,started:now,changed:now,read:true,key:"resume-restoredActive")]
+restoredActive.mergeLive([task("resume-restoredActive",.running,now,now)])
+check(restoredActive.visibleTasks.contains{$0.key=="resume-restoredActive"},"Previously saved hidden running task revives on first live refresh")
+restoredActive.tasks[0].read=true
+restoredActive.mergeLive([task("resume-restoredActive",.awaiting,now,now+1)])
+check(restoredActive.waiting,"Hidden running task becoming awaiting is visible again")
 check(retention.carryoverTaskKeys==["retain-wait","retain-fail"],"Carryover tracked for reconciliation")
 check(retention.fading.count==2,"Completed and cancelled fade out")
 retention.mergeLive([task("retain-done",.completed,now,now)])
