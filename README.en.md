@@ -20,8 +20,9 @@
 > Built on [KuroCat](https://github.com/chanke17/KuroCat), with a Codex / Claude work mode for your desktop cat.
 
 <p align="center">
-  <img src="assets/work-mode.png" width="300" alt="Work mode with quota and task bubbles"/>
-  <img src="assets/pickup-dizzy.png" width="300" alt="Carry the cat, keyboard, mouse and work bubbles"/>
+  <img src="assets/demo_work_typing.gif" width="260" alt="Work mode: autonomous typing and task bubbles"/>
+  <img src="assets/demo_work_awaiting.gif" width="260" alt="Awaiting action: attention, buttons and task states"/>
+  <img src="assets/demo_work_pickup.gif" width="260" alt="Pick up and drag: attached keyboard, bubbles and dizzy eyes"/>
 </p>
 
 *Demo quota and task values are simulated. Real values require connecting your tools.*

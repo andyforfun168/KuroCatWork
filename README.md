@@ -20,8 +20,9 @@
 > 基于 [KuroCat](https://github.com/chanke17/KuroCat) 开发，为桌面小猫加入 Codex / Claude 工作模式。
 
 <p align="center">
-  <a href="https://github.com/andyforfun168/KuroCatWork/releases/download/v1.4.4/KuroCatWork-demo.mp4"><img src="assets/work-mode.png" width="270" alt="工作模式：额度与任务泡泡"/></a>
-  <img src="assets/pickup-dizzy.png" width="270" alt="拎起小猫，键鼠和工作条一起摆动"/>
+  <img src="assets/demo_work_typing.gif" width="260" alt="工作模式：双手自主打字与任务泡泡"/>
+  <img src="assets/demo_work_awaiting.gif" width="260" alt="等待处理：停手抬头与任务状态变化"/>
+  <img src="assets/demo_work_pickup.gif" width="260" alt="拎起拖动：键鼠与工作条跟随，甩动眩晕"/>
 </p>
 
 <p align="center"><i>演示画面使用模拟额度与任务；实际使用需连接自己的工具和账户。</i></p>
